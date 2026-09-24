@@ -40,4 +40,21 @@ export class DashboardService {
       count: item._count.id,
     }));
   }
+
+  async getByDepartment() {
+    const results = await this.prisma.employee.groupBy({
+      by: ['department'],
+      _count: {
+        id: true,
+      },
+      orderBy: {
+        department: 'asc',
+      },
+    });
+
+    return results.map((item) => ({
+      department: item.department,
+      count: item._count.id,
+    }));
+  }
 }

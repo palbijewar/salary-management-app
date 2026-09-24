@@ -14,4 +14,9 @@ export class DashboardController {
   getByCountry() {
     return this.dashboardService.getByCountry();
   }
+
+  @Get('by-department')
+  getByDepartment() {
+    return this.dashboardService.getByDepartment();
+  }
 }
