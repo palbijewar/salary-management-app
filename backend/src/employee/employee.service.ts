@@ -88,4 +88,20 @@ export class EmployeeService {
       },
     });
   }
+
+  async findOne(id: string) {
+    return this.prisma.employee.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        salaries: {
+          orderBy: {
+            effectiveFrom: 'desc',
+          },
+          take: 1,
+        },
+      },
+    });
+  }
 }
