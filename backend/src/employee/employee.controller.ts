@@ -1,13 +1,15 @@
 import {
+  Body,
   Controller,
   Get,
   NotFoundException,
   Param,
+  Patch,
   Query,
 } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
 import { EmployeeStatus } from '@prisma/client';
-import { EmployeeQueryDto } from './dto';
+import { EmployeeQueryDto, UpdateSalaryDto } from './dto';
 
 @Controller('employees')
 export class EmployeeController {
@@ -39,5 +41,19 @@ export class EmployeeController {
     }
 
     return employee;
+  }
+
+  @Patch(':id/salary')
+  updateSalary(@Param('id') id: string, @Body() dto: UpdateSalaryDto) {
+    console.log('Salary DTO:', dto);
+    console.log('effectiveFrom:', dto.effectiveFrom);
+    console.log('effectiveFrom type:', typeof dto.effectiveFrom);
+
+    return this.employeeService.updateSalary(
+      id,
+      dto.amount,
+      dto.currency,
+      dto.effectiveFrom,
+    );
   }
 }

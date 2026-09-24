@@ -1,6 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Type } from 'class-transformer';
-import { IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import {
+  IsDate,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
 import { EmployeeStatus } from '@prisma/client';
 
 export class EmployeeQueryDto {
@@ -32,4 +40,18 @@ export class EmployeeQueryDto {
   @IsOptional()
   @IsEnum(EmployeeStatus)
   status?: EmployeeStatus;
+}
+
+export class UpdateSalaryDto {
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  amount!: number;
+
+  @IsString()
+  currency!: string;
+
+  @Type(() => Date)
+  @IsDate()
+  effectiveFrom!: Date;
 }

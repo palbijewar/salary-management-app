@@ -104,4 +104,20 @@ export class EmployeeService {
       },
     });
   }
+
+  async updateSalary(
+    employeeId: string,
+    amount: number,
+    currency: string,
+    effectiveFrom: Date,
+  ) {
+    return this.prisma.salaryRecord.create({
+      data: {
+        employeeId,
+        amount,
+        currency,
+        effectiveFrom: new Date(effectiveFrom),
+      },
+    });
+  }
 }
