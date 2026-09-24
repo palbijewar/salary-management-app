@@ -77,4 +77,15 @@ export class EmployeeService {
       },
     };
   }
+
+  async getSalaryHistory(employeeId: string) {
+    return this.prisma.salaryRecord.findMany({
+      where: {
+        employeeId,
+      },
+      orderBy: {
+        effectiveFrom: 'desc',
+      },
+    });
+  }
 }

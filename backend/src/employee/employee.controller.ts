@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
 import { EmployeeStatus } from '@prisma/client';
 
@@ -23,5 +23,10 @@ export class EmployeeController {
       department,
       status,
     );
+  }
+
+  @Get(':id/salary-history')
+  getSalaryHistory(@Param('id') id: string) {
+    return this.employeeService.getSalaryHistory(id);
   }
 }
