@@ -38,6 +38,9 @@ function App() {
   >([]);
 
   const [search, setSearch] = useState('');
+  const [country, setCountry] = useState('');
+  const [department, setDepartment] = useState('');
+  const [status, setStatus] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
@@ -58,11 +61,14 @@ function App() {
       page,
       limit: 10,
       search: search || undefined,
+      country: country || undefined,
+      department: department || undefined,
+      status: status || undefined,
     }).then((result) => {
       setEmployees(result.data);
       setTotalPages(result.meta.totalPages);
     });
-  }, [page, search]);
+  }, [page, search, country, department, status]);
 
   return (
     <div className="app">
@@ -111,14 +117,58 @@ function App() {
       <section className="panel">
         <h2>Employees</h2>
 
-        <input
-          placeholder="Search employees..."
-          value={search}
-          onChange={(event) => {
-            setSearch(event.target.value);
-            setPage(1);
-          }}
-        />
+        <div className="filters">
+          <input
+            placeholder="Search employees..."
+            value={search}
+            onChange={(event) => {
+              setSearch(event.target.value);
+              setPage(1);
+            }}
+          />
+
+          <select
+            value={country}
+            onChange={(event) => {
+              setCountry(event.target.value);
+              setPage(1);
+            }}
+          >
+            <option value="">All Countries</option>
+            {countries.map((item) => (
+              <option key={item.country} value={item.country}>
+                {item.country}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={department}
+            onChange={(event) => {
+              setDepartment(event.target.value);
+              setPage(1);
+            }}
+          >
+            <option value="">All Departments</option>
+            {departments.map((item) => (
+              <option key={item.department} value={item.department}>
+                {item.department}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={status}
+            onChange={(event) => {
+              setStatus(event.target.value);
+              setPage(1);
+            }}
+          >
+            <option value="">All Status</option>
+            <option value="ACTIVE">Active</option>
+            <option value="INACTIVE">Inactive</option>
+          </select>
+        </div>
 
         <table>
           <thead>
@@ -146,9 +196,7 @@ function App() {
                   <td>{employee.country}</td>
                   <td>{employee.status}</td>
                   <td>
-                    {salary
-                      ? `${salary.currency} ${salary.amount}`
-                      : '-'}
+                    {salary ? `${salary.currency} ${salary.amount}` : "-"}
                   </td>
                 </tr>
               );
