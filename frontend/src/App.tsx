@@ -5,6 +5,7 @@ import {
   getDepartmentStats,
   getEmployees,
   getEmployeeSalaryHistory,
+  updateEmployeeSalary,
 } from "./api";
 import "./index.css";
 
@@ -56,6 +57,11 @@ function App() {
     }[]
   >([]);
 
+  const [salaryAmount, setSalaryAmount] = useState("");
+  const [salaryCurrency, setSalaryCurrency] = useState("");
+  const [effectiveFrom, setEffectiveFrom] = useState("");
+  const [isUpdatingSalary, setIsUpdatingSalary] = useState(false);
+
   useEffect(() => {
     Promise.all([
       getDashboardSummary(),
@@ -87,6 +93,39 @@ function App() {
 
     const history = await getEmployeeSalaryHistory(employee.id);
     setSalaryHistory(history);
+  };
+
+  const handleSalaryUpdate = async () => {
+    if (!selectedEmployee) return;
+
+    if (!salaryAmount || !salaryCurrency || !effectiveFrom) {
+      alert("Please fill all salary fields.");
+      return;
+    }
+
+    try {
+      setIsUpdatingSalary(true);
+
+      await updateEmployeeSalary(selectedEmployee.id, {
+        amount: Number(salaryAmount),
+        currency: salaryCurrency,
+        effectiveFrom,
+      });
+
+      const history = await getEmployeeSalaryHistory(selectedEmployee.id);
+      setSalaryHistory(history);
+
+      setSalaryAmount("");
+      setSalaryCurrency("");
+      setEffectiveFrom("");
+
+      alert("Salary updated successfully.");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to update salary.");
+    } finally {
+      setIsUpdatingSalary(false);
+    }
   };
 
   return (
@@ -206,7 +245,11 @@ function App() {
               const salary = employee.salaries[0];
 
               return (
-                <tr key={employee.id} onClick={() => openEmployee(employee)}>
+                <tr
+                  key={employee.id}
+                  onClick={() => openEmployee(employee)}
+                  className="employee-row"
+                >
                   <td>{employee.employeeCode}</td>
                   <td>
                     {employee.firstName} {employee.lastName}
@@ -240,6 +283,37 @@ function App() {
                 {new Date(salary.effectiveFrom).toLocaleDateString()}
               </p>
             ))}
+
+            <h3>Update Salary</h3>
+
+            <input
+              type="number"
+              placeholder="Salary amount"
+              value={salaryAmount}
+              onChange={(event) => setSalaryAmount(event.target.value)}
+            />
+
+            <select
+              value={salaryCurrency}
+              onChange={(event) => setSalaryCurrency(event.target.value)}
+            >
+              <option value="">Select currency</option>
+              <option value="INR">INR</option>
+              <option value="USD">USD</option>
+              <option value="GBP">GBP</option>
+              <option value="EUR">EUR</option>
+              <option value="SGD">SGD</option>
+            </select>
+
+            <input
+              type="date"
+              value={effectiveFrom}
+              onChange={(event) => setEffectiveFrom(event.target.value)}
+            />
+
+            <button onClick={handleSalaryUpdate} disabled={isUpdatingSalary}>
+              {isUpdatingSalary ? "Updating..." : "Update Salary"}
+            </button>
 
             <button onClick={() => setSelectedEmployee(null)}>Close</button>
           </div>

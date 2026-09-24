@@ -35,3 +35,19 @@ export const getEmployeeSalaryHistory = async (employeeId: string) => {
   const response = await api.get(`/employees/${employeeId}/salary-history`);
   return response.data;
 };
+
+export const updateEmployeeSalary = async (
+  employeeId: string,
+  data: {
+    amount: number;
+    currency: string;
+    effectiveFrom: string;
+  },
+) => {
+  const response = await api.patch(
+    `/employees/${employeeId}/salary`,
+    data,
+  );
+
+  return response.data;
+};

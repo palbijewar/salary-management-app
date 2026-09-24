@@ -146,3 +146,11 @@ button:disabled {
     grid-template-columns: 1fr;
   }
 }
+
+.employee-row {
+  cursor: pointer;
+}
+
+.employee-row:hover {
+  background: #f8fafc;
+}
