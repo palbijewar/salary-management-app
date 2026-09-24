@@ -1,11 +1,11 @@
-import axios from 'axios';
+import axios from "axios";
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
 });
 
 export const getDashboardSummary = async () => {
-  const response = await api.get('/dashboard/summary');
+  const response = await api.get("/dashboard/summary");
   return response.data;
 };
 
@@ -17,16 +17,21 @@ export const getEmployees = async (params: {
   department?: string;
   status?: string;
 }) => {
-  const response = await api.get('/employees', { params });
+  const response = await api.get("/employees", { params });
   return response.data;
 };
 
 export const getCountryStats = async () => {
-  const response = await api.get('/dashboard/by-country');
+  const response = await api.get("/dashboard/by-country");
   return response.data;
 };
 
 export const getDepartmentStats = async () => {
-  const response = await api.get('/dashboard/by-department');
+  const response = await api.get("/dashboard/by-department");
+  return response.data;
+};
+
+export const getEmployeeSalaryHistory = async (employeeId: string) => {
+  const response = await api.get(`/employees/${employeeId}/salary-history`);
   return response.data;
 };

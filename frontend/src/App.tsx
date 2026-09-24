@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
   getCountryStats,
   getDashboardSummary,
   getDepartmentStats,
   getEmployees,
-} from './api';
-import './index.css';
+  getEmployeeSalaryHistory,
+} from "./api";
+import "./index.css";
 
 type Employee = {
   id: string;
@@ -37,12 +38,23 @@ function App() {
     { department: string; count: number }[]
   >([]);
 
-  const [search, setSearch] = useState('');
-  const [country, setCountry] = useState('');
-  const [department, setDepartment] = useState('');
-  const [status, setStatus] = useState('');
+  const [search, setSearch] = useState("");
+  const [country, setCountry] = useState("");
+  const [department, setDepartment] = useState("");
+  const [status, setStatus] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
+    null,
+  );
+
+  const [salaryHistory, setSalaryHistory] = useState<
+    {
+      amount: string;
+      currency: string;
+      effectiveFrom: string;
+    }[]
+  >([]);
 
   useEffect(() => {
     Promise.all([
@@ -69,6 +81,13 @@ function App() {
       setTotalPages(result.meta.totalPages);
     });
   }, [page, search, country, department, status]);
+
+  const openEmployee = async (employee: Employee) => {
+    setSelectedEmployee(employee);
+
+    const history = await getEmployeeSalaryHistory(employee.id);
+    setSalaryHistory(history);
+  };
 
   return (
     <div className="app">
@@ -187,7 +206,7 @@ function App() {
               const salary = employee.salaries[0];
 
               return (
-                <tr key={employee.id}>
+                <tr key={employee.id} onClick={() => openEmployee(employee)}>
                   <td>{employee.employeeCode}</td>
                   <td>
                     {employee.firstName} {employee.lastName}
@@ -203,7 +222,28 @@ function App() {
             })}
           </tbody>
         </table>
+        {selectedEmployee && (
+          <div className="panel">
+            <h2>
+              {selectedEmployee.firstName} {selectedEmployee.lastName}
+            </h2>
 
+            <p>{selectedEmployee.employeeCode}</p>
+            <p>{selectedEmployee.jobTitle}</p>
+            <p>{selectedEmployee.country}</p>
+
+            <h3>Salary History</h3>
+
+            {salaryHistory.map((salary) => (
+              <p key={salary.effectiveFrom}>
+                {salary.currency} {salary.amount} —{" "}
+                {new Date(salary.effectiveFrom).toLocaleDateString()}
+              </p>
+            ))}
+
+            <button onClick={() => setSelectedEmployee(null)}>Close</button>
+          </div>
+        )}
         <div className="pagination">
           <button
             disabled={page === 1}
