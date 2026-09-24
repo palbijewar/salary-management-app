@@ -45,6 +45,9 @@ function App() {
   const [status, setStatus] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalEmployees, setTotalEmployees] = useState(0);
+  const [isLoadingEmployees, setIsLoadingEmployees] = useState(false);
+  const [employeeError, setEmployeeError] = useState("");
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
     null,
   );
@@ -75,19 +78,33 @@ function App() {
   }, []);
 
   useEffect(() => {
-    getEmployees({
-      page,
-      limit: 10,
-      search: search || undefined,
-      country: country || undefined,
-      department: department || undefined,
-      status: status || undefined,
-    }).then((result) => {
-      setEmployees(result.data);
-      setTotalPages(result.meta.totalPages);
-    });
-  }, [page, search, country, department, status]);
+    const loadEmployees = async () => {
+      try {
+        setIsLoadingEmployees(true);
+        setEmployeeError("");
 
+        const result = await getEmployees({
+          page,
+          limit: 10,
+          search: search || undefined,
+          country: country || undefined,
+          department: department || undefined,
+          status: status || undefined,
+        });
+
+        setEmployees(result.data);
+        setTotalPages(result.meta.totalPages);
+        setTotalEmployees(result.meta.total);
+      } catch (error) {
+        console.error(error);
+        setEmployeeError("Unable to load employees. Please try again.");
+      } finally {
+        setIsLoadingEmployees(false);
+      }
+    };
+
+    void loadEmployees();
+  }, [page, search, country, department, status]);
   const openEmployee = async (employee: Employee) => {
     setSelectedEmployee(employee);
 
@@ -313,6 +330,19 @@ function App() {
             })}
           </tbody>
         </table>
+        {isLoadingEmployees && (
+          <div className="table-message">Loading employees...</div>
+        )}
+
+        {employeeError && (
+          <div className="table-message error-message">{employeeError}</div>
+        )}
+
+        {!isLoadingEmployees && !employeeError && employees.length === 0 && (
+          <div className="table-message">
+            No employees found matching your filters.
+          </div>
+        )}
         {selectedEmployee && (
           <div className="modal-overlay">
             <div className="employee-modal">
@@ -412,23 +442,30 @@ function App() {
           </div>
         )}
         <div className="pagination">
-          <button
-            disabled={page === 1}
-            onClick={() => setPage((current) => current - 1)}
-          >
-            Previous
-          </button>
-
           <span>
-            Page {page} of {totalPages}
+            Showing {employees.length} of {totalEmployees.toLocaleString()}{" "}
+            employees
           </span>
 
-          <button
-            disabled={page === totalPages}
-            onClick={() => setPage((current) => current + 1)}
-          >
-            Next
-          </button>
+          <div className="pagination-controls">
+            <button
+              disabled={page === 1}
+              onClick={() => setPage((current) => current - 1)}
+            >
+              Previous
+            </button>
+
+            <span>
+              Page <strong>{page}</strong> of {totalPages}
+            </span>
+
+            <button
+              disabled={page === totalPages}
+              onClick={() => setPage((current) => current + 1)}
+            >
+              Next
+            </button>
+          </div>
         </div>
       </section>
     </div>

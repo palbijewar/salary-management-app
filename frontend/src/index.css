@@ -327,3 +327,27 @@ button:disabled {
   background: #fee2e2;
   color: #991b1b;
 }
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pagination-controls span {
+  white-space: nowrap;
+}
+
+.table-message {
+  padding: 32px;
+  text-align: center;
+  color: #6b7280;
+  background: #f9fafb;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+.error-message {
+  color: #991b1b;
+  background: #fef2f2;
+}
