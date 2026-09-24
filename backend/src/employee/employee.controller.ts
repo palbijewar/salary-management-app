@@ -1,4 +1,10 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Query,
+} from '@nestjs/common';
 import { EmployeeService } from './employee.service';
 import { EmployeeStatus } from '@prisma/client';
 import { EmployeeQueryDto } from './dto';
@@ -25,7 +31,13 @@ export class EmployeeController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.employeeService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    const employee = await this.employeeService.findOne(id);
+
+    if (!employee) {
+      throw new NotFoundException('Employee not found');
+    }
+
+    return employee;
   }
 }
