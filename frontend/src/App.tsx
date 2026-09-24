@@ -138,37 +138,72 @@ function App() {
       <section className="cards">
         <div className="card">
           <span>Total Employees</span>
-          <strong>{summary.total}</strong>
+          <strong>{summary.total.toLocaleString()}</strong>
+          <small>All employees</small>
         </div>
 
         <div className="card">
-          <span>Active</span>
-          <strong>{summary.active}</strong>
+          <span>Active Employees</span>
+          <strong>{summary.active.toLocaleString()}</strong>
+          <small>
+            {summary.total
+              ? `${Math.round((summary.active / summary.total) * 100)}% of workforce`
+              : "—"}
+          </small>
         </div>
 
         <div className="card">
-          <span>Inactive</span>
-          <strong>{summary.inactive}</strong>
+          <span>Inactive Employees</span>
+          <strong>{summary.inactive.toLocaleString()}</strong>
+          <small>
+            {summary.total
+              ? `${Math.round((summary.inactive / summary.total) * 100)}% of workforce`
+              : "—"}
+          </small>
         </div>
       </section>
 
       <section className="stats">
         <div className="panel">
           <h2>Employees by Country</h2>
-          {countries.map((item) => (
-            <p key={item.country}>
-              {item.country}: <strong>{item.count}</strong>
-            </p>
-          ))}
+
+          <div className="stat-list">
+            {countries.map((item) => (
+              <div className="stat-row" key={item.country}>
+                <span>{item.country}</span>
+                <div className="stat-value">
+                  <div
+                    className="stat-bar"
+                    style={{
+                      width: `${(item.count / summary.total) * 100}%`,
+                    }}
+                  />
+                </div>
+                <strong>{item.count.toLocaleString()}</strong>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="panel">
           <h2>Employees by Department</h2>
-          {departments.map((item) => (
-            <p key={item.department}>
-              {item.department}: <strong>{item.count}</strong>
-            </p>
-          ))}
+
+          <div className="stat-list">
+            {departments.map((item) => (
+              <div className="stat-row" key={item.department}>
+                <span>{item.department}</span>
+                <div className="stat-value">
+                  <div
+                    className="stat-bar"
+                    style={{
+                      width: `${(item.count / summary.total) * 100}%`,
+                    }}
+                  />
+                </div>
+                <strong>{item.count.toLocaleString()}</strong>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -256,9 +291,22 @@ function App() {
                   </td>
                   <td>{employee.department}</td>
                   <td>{employee.country}</td>
-                  <td>{employee.status}</td>
                   <td>
-                    {salary ? `${salary.currency} ${salary.amount}` : "-"}
+                    <span
+                      className={`status-badge ${employee.status.toLowerCase()}`}
+                    >
+                      {employee.status}
+                    </span>
+                  </td>
+                  <td>
+                    {salary ? (
+                      <strong>
+                        {salary.currency}{" "}
+                        {Number(salary.amount).toLocaleString()}
+                      </strong>
+                    ) : (
+                      "-"
+                    )}
                   </td>
                 </tr>
               );
