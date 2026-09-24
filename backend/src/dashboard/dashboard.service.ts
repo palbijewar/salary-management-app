@@ -25,7 +25,7 @@ export class DashboardService {
   }
 
   async getByCountry() {
-    return this.prisma.employee.groupBy({
+    const results = await this.prisma.employee.groupBy({
       by: ['country'],
       _count: {
         id: true,
@@ -34,5 +34,10 @@ export class DashboardService {
         country: 'asc',
       },
     });
+
+    return results.map((item) => ({
+      country: item.country,
+      count: item._count.id,
+    }));
   }
 }
