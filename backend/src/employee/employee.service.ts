@@ -5,12 +5,28 @@ import { PrismaService } from '../prisma/prisma.service';
 export class EmployeeService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll() {
-    return this.prisma.employee.findMany({
-      orderBy: {
-        employeeCode: 'asc',
+  async findAll(page = 1, limit = 20) {
+    const skip = (page - 1) * limit;
+
+    const [employees, total] = await Promise.all([
+      this.prisma.employee.findMany({
+        orderBy: {
+          employeeCode: 'asc',
+        },
+        skip,
+        take: limit,
+      }),
+      this.prisma.employee.count(),
+    ]);
+
+    return {
+      data: employees,
+      meta: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
       },
-      take: 50,
-    });
+    };
   }
 }
