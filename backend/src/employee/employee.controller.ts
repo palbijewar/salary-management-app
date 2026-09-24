@@ -1,27 +1,21 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
 import { EmployeeStatus } from '@prisma/client';
+import { EmployeeQueryDto } from './dto';
 
 @Controller('employees')
 export class EmployeeController {
   constructor(private readonly employeeService: EmployeeService) {}
 
   @Get()
-  findAll(
-    @Query('page') page?: string,
-    @Query('limit') limit?: string,
-    @Query('search') search?: string,
-    @Query('country') country?: string,
-    @Query('department') department?: string,
-    @Query('status') status?: EmployeeStatus,
-  ) {
+  findAll(@Query() query: EmployeeQueryDto) {
     return this.employeeService.findAll(
-      page ? Number(page) : 1,
-      limit ? Number(limit) : 20,
-      search,
-      country,
-      department,
-      status,
+      query.page,
+      query.limit,
+      query.search,
+      query.country,
+      query.department,
+      query.status,
     );
   }
 
