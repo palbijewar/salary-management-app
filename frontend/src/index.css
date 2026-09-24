@@ -154,3 +154,111 @@ button:disabled {
 .employee-row:hover {
   background: #f8fafc;
 }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.employee-modal {
+  width: 100%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: white;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.modal-header h2 {
+  margin: 0 0 4px;
+}
+
+.modal-header span {
+  color: #6b7280;
+}
+
+.close-button {
+  background: transparent;
+  color: #374151;
+  font-size: 28px;
+  padding: 0 8px;
+}
+
+.employee-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.employee-details div {
+  background: #f9fafb;
+  padding: 14px;
+  border-radius: 8px;
+}
+
+.employee-details span {
+  display: block;
+  color: #6b7280;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+.salary-section {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 20px;
+  margin-top: 20px;
+}
+
+.salary-record {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.salary-record span {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.salary-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.salary-form input,
+.salary-form select {
+  margin-bottom: 0;
+}
+
+@media (max-width: 700px) {
+  .employee-details,
+  .salary-form {
+    grid-template-columns: 1fr;
+  }
+
+  .salary-record {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}

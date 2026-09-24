@@ -266,56 +266,101 @@ function App() {
           </tbody>
         </table>
         {selectedEmployee && (
-          <div className="panel">
-            <h2>
-              {selectedEmployee.firstName} {selectedEmployee.lastName}
-            </h2>
+          <div className="modal-overlay">
+            <div className="employee-modal">
+              <div className="modal-header">
+                <div>
+                  <h2>
+                    {selectedEmployee.firstName} {selectedEmployee.lastName}
+                  </h2>
+                  <span>{selectedEmployee.employeeCode}</span>
+                </div>
 
-            <p>{selectedEmployee.employeeCode}</p>
-            <p>{selectedEmployee.jobTitle}</p>
-            <p>{selectedEmployee.country}</p>
+                <button
+                  className="close-button"
+                  onClick={() => setSelectedEmployee(null)}
+                >
+                  ×
+                </button>
+              </div>
 
-            <h3>Salary History</h3>
+              <div className="employee-details">
+                <div>
+                  <span>Department</span>
+                  <strong>{selectedEmployee.department}</strong>
+                </div>
 
-            {salaryHistory.map((salary) => (
-              <p key={salary.effectiveFrom}>
-                {salary.currency} {salary.amount} —{" "}
-                {new Date(salary.effectiveFrom).toLocaleDateString()}
-              </p>
-            ))}
+                <div>
+                  <span>Job Title</span>
+                  <strong>{selectedEmployee.jobTitle}</strong>
+                </div>
 
-            <h3>Update Salary</h3>
+                <div>
+                  <span>Country</span>
+                  <strong>{selectedEmployee.country}</strong>
+                </div>
 
-            <input
-              type="number"
-              placeholder="Salary amount"
-              value={salaryAmount}
-              onChange={(event) => setSalaryAmount(event.target.value)}
-            />
+                <div>
+                  <span>Status</span>
+                  <strong>{selectedEmployee.status}</strong>
+                </div>
+              </div>
 
-            <select
-              value={salaryCurrency}
-              onChange={(event) => setSalaryCurrency(event.target.value)}
-            >
-              <option value="">Select currency</option>
-              <option value="INR">INR</option>
-              <option value="USD">USD</option>
-              <option value="GBP">GBP</option>
-              <option value="EUR">EUR</option>
-              <option value="SGD">SGD</option>
-            </select>
+              <div className="salary-section">
+                <h3>Salary History</h3>
 
-            <input
-              type="date"
-              value={effectiveFrom}
-              onChange={(event) => setEffectiveFrom(event.target.value)}
-            />
+                {salaryHistory.map((salary) => (
+                  <div className="salary-record" key={salary.effectiveFrom}>
+                    <strong>
+                      {salary.currency} {salary.amount}
+                    </strong>
 
-            <button onClick={handleSalaryUpdate} disabled={isUpdatingSalary}>
-              {isUpdatingSalary ? "Updating..." : "Update Salary"}
-            </button>
+                    <span>
+                      Effective from{" "}
+                      {new Date(salary.effectiveFrom).toLocaleDateString()}
+                    </span>
+                  </div>
+                ))}
+              </div>
 
-            <button onClick={() => setSelectedEmployee(null)}>Close</button>
+              <div className="salary-section">
+                <h3>Update Salary</h3>
+
+                <div className="salary-form">
+                  <input
+                    type="number"
+                    placeholder="Salary amount"
+                    value={salaryAmount}
+                    onChange={(event) => setSalaryAmount(event.target.value)}
+                  />
+
+                  <select
+                    value={salaryCurrency}
+                    onChange={(event) => setSalaryCurrency(event.target.value)}
+                  >
+                    <option value="">Currency</option>
+                    <option value="INR">INR</option>
+                    <option value="USD">USD</option>
+                    <option value="GBP">GBP</option>
+                    <option value="EUR">EUR</option>
+                    <option value="SGD">SGD</option>
+                  </select>
+
+                  <input
+                    type="date"
+                    value={effectiveFrom}
+                    onChange={(event) => setEffectiveFrom(event.target.value)}
+                  />
+                </div>
+
+                <button
+                  onClick={handleSalaryUpdate}
+                  disabled={isUpdatingSalary}
+                >
+                  {isUpdatingSalary ? "Updating..." : "Update Salary"}
+                </button>
+              </div>
+            </div>
           </div>
         )}
         <div className="pagination">
