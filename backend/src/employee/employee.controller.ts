@@ -29,4 +29,9 @@ export class EmployeeController {
   getSalaryHistory(@Param('id') id: string) {
     return this.employeeService.getSalaryHistory(id);
   }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.employeeService.findOne(id);
+  }
 }
