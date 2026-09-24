@@ -20,3 +20,8 @@ coverage/
 # IDE
 .vscode/
 .idea/
+# AI tool generated files
+.agents/
+.claude/
+.cursor/
+.devin/
