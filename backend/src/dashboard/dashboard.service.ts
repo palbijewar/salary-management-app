@@ -23,4 +23,16 @@ export class DashboardService {
       inactive,
     };
   }
+
+  async getByCountry() {
+    return this.prisma.employee.groupBy({
+      by: ['country'],
+      _count: {
+        id: true,
+      },
+      orderBy: {
+        country: 'asc',
+      },
+    });
+  }
 }

@@ -9,4 +9,9 @@ export class DashboardController {
   getSummary() {
     return this.dashboardService.getSummary();
   }
+
+  @Get('by-country')
+  getByCountry() {
+    return this.dashboardService.getByCountry();
+  }
 }
