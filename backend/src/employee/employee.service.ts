@@ -55,6 +55,14 @@ export class EmployeeService {
         },
         skip,
         take: limit,
+        include: {
+          salaries: {
+            orderBy: {
+              effectiveFrom: 'desc',
+            },
+            take: 1,
+          },
+        },
       }),
       this.prisma.employee.count({ where }),
     ]);
