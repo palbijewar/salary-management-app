@@ -38,7 +38,8 @@ function App() {
   const [departments, setDepartments] = useState<
     { department: string; count: number }[]
   >([]);
-
+  const [isLoadingDashboard, setIsLoadingDashboard] = useState(true);
+  const [dashboardError, setDashboardError] = useState("");
   const [search, setSearch] = useState("");
   const [country, setCountry] = useState("");
   const [department, setDepartment] = useState("");
@@ -66,15 +67,29 @@ function App() {
   const [isUpdatingSalary, setIsUpdatingSalary] = useState(false);
 
   useEffect(() => {
-    Promise.all([
-      getDashboardSummary(),
-      getCountryStats(),
-      getDepartmentStats(),
-    ]).then(([summaryData, countryData, departmentData]) => {
-      setSummary(summaryData);
-      setCountries(countryData);
-      setDepartments(departmentData);
-    });
+    const loadDashboard = async () => {
+      try {
+        setIsLoadingDashboard(true);
+        setDashboardError("");
+
+        const [summaryData, countryData, departmentData] = await Promise.all([
+          getDashboardSummary(),
+          getCountryStats(),
+          getDepartmentStats(),
+        ]);
+
+        setSummary(summaryData);
+        setCountries(countryData);
+        setDepartments(departmentData);
+      } catch (error) {
+        console.error(error);
+        setDashboardError("Unable to load dashboard data.");
+      } finally {
+        setIsLoadingDashboard(false);
+      }
+    };
+
+    void loadDashboard();
   }, []);
 
   useEffect(() => {
@@ -151,7 +166,13 @@ function App() {
         <h1>Salary Management</h1>
         <p>HR Dashboard</p>
       </header>
+      {isLoadingDashboard && (
+        <div className="table-message">Loading dashboard...</div>
+      )}
 
+      {dashboardError && (
+        <div className="table-message error-message">{dashboardError}</div>
+      )}
       <section className="cards">
         <div className="card">
           <span>Total Employees</span>

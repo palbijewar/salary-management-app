@@ -10,6 +10,9 @@ describe('EmployeeService', () => {
       findMany: jest.fn(),
       count: jest.fn(),
     },
+    salaryRecord: {
+      create: jest.fn(),
+    },
   };
 
   beforeEach(async () => {

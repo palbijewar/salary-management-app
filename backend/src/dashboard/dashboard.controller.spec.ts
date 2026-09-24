@@ -7,7 +7,11 @@ describe('DashboardService', () => {
 
   const prismaMock = {
     employee: {
+      findMany: jest.fn(),
       count: jest.fn(),
+    },
+    salaryRecord: {
+      create: jest.fn(),
     },
   };
 
