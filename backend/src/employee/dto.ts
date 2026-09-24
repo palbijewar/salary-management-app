@@ -5,7 +5,9 @@ import {
   IsEnum,
   IsInt,
   IsOptional,
+  IsPositive,
   IsString,
+  Length,
   Max,
   Min,
 } from 'class-validator';
@@ -45,10 +47,11 @@ export class EmployeeQueryDto {
 export class UpdateSalaryDto {
   @Type(() => Number)
   @IsInt()
-  @Min(1)
+  @IsPositive()
   amount!: number;
 
   @IsString()
+  @Length(3, 3)
   currency!: string;
 
   @Type(() => Date)
